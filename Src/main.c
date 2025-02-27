@@ -27,17 +27,12 @@ int main(void)
 {
 	GPIO_EnableClock(GPIOA);
 
-	GPIOA->MODER &= ~(3<<(2*2));
-	GPIOA->MODER |=(1<<(2*2));
-	GPIOA->ODR |=(1<<2);
+	GPIO_Init(GPIOA, 0, OUTPUT, PUSH_PULL, PULL_DOWN, LOW_SPEED);
+	GPIO_Init(GPIOA, 2, OUTPUT, PUSH_PULL, PULL_UP, LOW_SPEED);
 
 	while(1)
 	{
-		if(!(GPIOA->IDR & (1 << 0))){
-			GPIOA->ODR |= (1<<2); // turn LED ON
-		}
-		else{
-			GPIOA->ODR &= ~(1<<2); // turn LED OFF
-		}
+		// toggle LED on button press (pull )
+		GPIO_WriteOutputPin(GPIOA, 2, GPIO_ReadInputPin(GPIOA, 0));
 	}
 }

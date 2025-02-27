@@ -62,4 +62,28 @@ typedef struct
 }RCC_RegDef_t;
 
 
+typedef enum {
+	INPUT,
+	OUTPUT,
+	ALTERNATE_FUNCTION,
+	ANALOG
+} GPIO_Mode;
+
+typedef enum {
+	PUSH_PULL,
+	OPEN_DRAIN
+} GPIO_OutputType;
+
+typedef enum {
+	PULL_UP,
+	PULL_DOWN,
+} GPIO_PullType;
+
+typedef enum {
+	LOW_SPEED,
+	MEDIUM_SPEED,
+	HIGH_SPEED,
+	VERY_HIGH_SPEED
+} GPIO_Speed;
+
 #endif /* STM32F401_H_ */

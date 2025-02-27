@@ -1,0 +1,5 @@
+../Src/Stm32f401-gpio.c:10:6:GPIO_EnableClock	16	static
+../Src/Stm32f401-gpio.c:20:6:GPIO_Init	24	static
+../Src/Stm32f401-gpio.c:34:6:GPIO_WriteOutputPin	24	static
+../Src/Stm32f401-gpio.c:42:6:GPIO_TogglePin	16	static
+../Src/Stm32f401-gpio.c:46:5:GPIO_ReadInputPin	16	static
