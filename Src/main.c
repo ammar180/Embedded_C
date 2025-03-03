@@ -18,6 +18,7 @@
 
 #include <stdint.h>
 #include "Stm32f401-gpio.h"
+#include "Stm32f401-ADC-handler.h"
 
 void delay(volatile uint32_t time) {
     for(uint32_t i = 0; i < time * 1000; i++);
@@ -25,14 +26,25 @@ void delay(volatile uint32_t time) {
 
 int main(void)
 {
-	GPIO_EnableClock(GPIOA);
+    GPIO_EnableClock(GPIOA);
+    ADC_EnableClock();
 
-	GPIO_Init(GPIOA, 0, OUTPUT, PUSH_PULL, PULL_DOWN, LOW_SPEED);
-	GPIO_Init(GPIOA, 2, OUTPUT, PUSH_PULL, PULL_UP, LOW_SPEED);
+    GPIO_Init(GPIOA, 0, OUTPUT, PUSH_PULL, PULL_DOWN, LOW_SPEED);
+    GPIO_Init(GPIOA, 2, OUTPUT, PUSH_PULL, PULL_UP, LOW_SPEED);
+    ADC_Init();
 
-	while(1)
-	{
-		// toggle LED on button press (pull )
-		GPIO_WriteOutputPin(GPIOA, 2, GPIO_ReadInputPin(GPIOA, 0));
-	}
+    while(1)
+    {
+        // toggle LED on button press (pull )
+        GPIO_WriteOutputPin(GPIOA, 2, GPIO_ReadInputPin(GPIOA, 0));
+
+        // Read temperature sensor value
+        uint32_t adcValue = ADC_Read();
+        float temperature = ConvertToTemperature(adcValue);
+
+        // Use the temperature value as needed
+        // For example, you can print it to a debug console or use it in your application logic
+
+        delay(1000); // Delay for 1 second
+    }
 }
