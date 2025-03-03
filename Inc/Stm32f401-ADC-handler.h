@@ -6,7 +6,7 @@
 
 void ADC_EnableClock(void);
 
-void ADC_Init(ADC_Channel channel, ADC_SampleTime sampleTime);
+void ADC_Init(ADC_Channel channel, ADC_SampleTime sampleTime, ADC_CR1_Bits resolution);
 
 uint32_t ADC_Read(void);
 

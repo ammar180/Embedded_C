@@ -11,7 +11,7 @@
 #include "stm32f401.h"
 
 void GPIO_EnableClock(GPIO *pGPIOx);
-void GPIO_Init(GPIO *pGPIOx, int pinNumber, int mode, int speed, int outputType, int pull);
+void GPIO_Init(GPIO *pGPIOx , int pinNumber , GPIO_Mode mode , GPIO_Speed speed , GPIO_OutputType outputType , GPIO_PullType pull);
 void GPIO_WriteOutputPin(GPIO *pGPIOx, int pinNumber, int value);
 void GPIO_TogglePin(GPIO *pGPIOx, int pinNumber);
 int GPIO_ReadInputPin(GPIO *pGPIOx, int pinNumber);

@@ -17,7 +17,7 @@ void GPIO_EnableClock(GPIO *pGPIOx){
 	}
 }
 
-void GPIO_Init(GPIO *pGPIOx , int pinNumber , int mode , int speed , int outputType , int pull){
+void GPIO_Init(GPIO *pGPIOx , int pinNumber , GPIO_Mode mode , GPIO_Speed speed , GPIO_OutputType outputType , GPIO_PullType pull){
 	pGPIOx->MODER &= ~(0x3 << (pinNumber * 2));
 	pGPIOx->MODER |= (mode << (pinNumber * 2));
 

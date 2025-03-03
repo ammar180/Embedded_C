@@ -29,15 +29,12 @@ int main(void)
     GPIO_EnableClock(GPIOA);
     ADC_EnableClock();
 
-    GPIO_Init(GPIOA, 0, OUTPUT, PUSH_PULL, PULL_DOWN, LOW_SPEED);
-    GPIO_Init(GPIOA, 2, OUTPUT, PUSH_PULL, PULL_UP, LOW_SPEED);
-    ADC_Init();
+    GPIO_Init(GPIOA, 0, ANALOG, LOW_SPEED, PUSH_PULL, OPEN_DRAIN);
+
+    ADC_Init(ADC_CHANNEL_0, ADC_SAMPLETIME_3CYCLES, ADC_CR1_RES);
 
     while(1)
     {
-        // toggle LED on button press (pull )
-        GPIO_WriteOutputPin(GPIOA, 2, GPIO_ReadInputPin(GPIOA, 0));
-
         // Read temperature sensor value
         uint32_t adcValue = ADC_Read();
         float temperature = ConvertToTemperature(adcValue);
