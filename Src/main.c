@@ -20,6 +20,17 @@
 #include "Stm32f401-gpio.h"
 #include "Stm32f401-ADC-handler.h"
 
+typedef enum
+{
+    TEMP_SENSOR_PIN,
+    RED_LED_PIN,
+    GREEN_LED_PIN,
+    YELLOW_LED_PIN,
+    BUTTON_PIN,
+    BUZZER_PIN,
+    FAN_PIN,
+} PinNumber;
+
 void delay(volatile uint32_t time) {
     for(uint32_t i = 0; i < time * 1000; i++);
 }
@@ -29,18 +40,75 @@ int main(void)
     GPIO_EnableClock(GPIOA);
     ADC_EnableClock();
 
-    GPIO_Init(GPIOA, 0, ANALOG, LOW_SPEED, PUSH_PULL, OPEN_DRAIN);
+    // define the LM35 temperature sensor pin as an analog input (for temperature measurement via ADC)
+    GPIO_Init(GPIOA, TEMP_SENSOR_PIN, ANALOG, LOW_SPEED, PUSH_PULL, PULL_UP);
+    // define teh 3 LEDs pins (Green, Yellow, Red for status indication)
+    GPIO_Init(GPIOA, RED_LED_PIN, OUTPUT, LOW_SPEED, PUSH_PULL, PULL_UP);    // Red LED
+    GPIO_Init(GPIOA, GREEN_LED_PIN, OUTPUT, LOW_SPEED, PUSH_PULL, PULL_UP);  // Green LED
+    GPIO_Init(GPIOA, YELLOW_LED_PIN, OUTPUT, LOW_SPEED, PUSH_PULL, PULL_UP); // Yellow LED
 
+    // define the button pin as an input (to switch temperature units and reset the system)
+    GPIO_Init(GPIOA, BUTTON_PIN, INPUT, LOW_SPEED, PUSH_PULL, PULL_UP);
+    // define buzzer pin as an output  (for critical temperature alerts)
+    GPIO_Init(GPIOA, BUZZER_PIN, OUTPUT, LOW_SPEED, PUSH_PULL, PULL_UP);
+    // define fan as output (controlled through GPIO)
+    GPIO_Init(GPIOA, FAN_PIN, OUTPUT, LOW_SPEED, PUSH_PULL, PULL_UP);
+
+    // Initialize the ADC to read from the temperature sensor
     ADC_Init(ADC_CHANNEL_0, ADC_SAMPLETIME_3CYCLES, ADC_CR1_RES);
 
-    while(1)
+    while (1)
     {
         // Read temperature sensor value
         uint32_t adcValue = ADC_Read();
         float temperature = ConvertToTemperature(adcValue);
-
-        // Use the temperature value as needed
-        // For example, you can print it to a debug console or use it in your application logic
+        /**
+         * Below 25°C → Green LED ON, Fan OFF
+         * 26°C – 35°C → Yellow LED ON, Fan ON
+         * Above 35°C → Red LED ON, Fan ON
+         * Above 45°C → Red LED + Buzzer ON (Critical Alert)
+         */
+        if (temperature < 25)
+        {
+            GPIO_WriteOutputPin(GPIOA, GREEN_LED_PIN, 1); // Green LED ON
+            GPIO_WriteOutputPin(GPIOA, FAN_PIN, 0); // Fan OFF
+        }
+        else if (temperature >= 26 && temperature <= 35)
+        {
+            GPIO_WriteOutputPin(GPIOA, YELLOW_LED_PIN, 1); // Yellow LED ON
+            GPIO_WriteOutputPin(GPIOA, FAN_PIN, 1); // Fan ON
+        }
+        else if (temperature > 35 && temperature < 45)
+        {
+            GPIO_WriteOutputPin(GPIOA, RED_LED_PIN, 1); // Red LED ON
+            GPIO_WriteOutputPin(GPIOA, FAN_PIN, 1); // Fan ON
+        }
+        else
+        {
+            GPIO_WriteOutputPin(GPIOA, RED_LED_PIN, 1); // Red LED ON
+            GPIO_WriteOutputPin(GPIOA, BUZZER_PIN, 1); // Buzzer ON
+            GPIO_WriteOutputPin(GPIOA, FAN_PIN, 1); // Fan ON
+        }
+        /**
+         * Button Functions:
+         * Short Press: Toggle between Celsius (°C) and Fahrenheit (°F) display.
+         * Long Press: Reset the entire system
+         */
+        if (GPIO_ReadInputPin(GPIOA, BUTTON_PIN) == 0)
+        {
+            delay(500); // Delay for 0.5 second
+            if (GPIO_ReadInputPin(GPIOA, BUTTON_PIN) == 0)
+            {
+                // Long press detected
+                // Reset the system
+                SystemReset();
+            }
+            else
+            {
+                // Short press detected
+                // Toggle between Celsius and Fahrenheit
+            }
+        }
 
         delay(1000); // Delay for 1 second
     }
