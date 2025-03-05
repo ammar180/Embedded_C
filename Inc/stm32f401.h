@@ -75,8 +75,10 @@ typedef enum {
 } GPIO_OutputType;
 
 typedef enum {
+	NO_UP_DOWN,
 	PULL_UP,
 	PULL_DOWN,
+	REVERCED
 } GPIO_PullType;
 
 typedef enum {

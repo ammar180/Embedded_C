@@ -42,7 +42,7 @@ typedef struct
 // ADC_SR register bit definitions
 typedef enum {
     ADC_SR_AWD = 0x01,
-    ADC_SR_EOC = 0x02,
+    ADC_SR_EOC = (1 << 1),
     ADC_SR_JEOC = 0x04,
     ADC_SR_JSTRT = 0x08,
     ADC_SR_STRT = 0x10,
@@ -51,20 +51,25 @@ typedef enum {
 
 // ADC_CR1 register bit definitions
 typedef enum {
-    ADC_CR1_AWDCH = 0x1F,
-    ADC_CR1_EOCIE = 0x20,
-    ADC_CR1_AWDIE = 0x40,
-    ADC_CR1_JEOCIE = 0x80,
-    ADC_CR1_SCAN = 0x100,
-    ADC_CR1_AWDSGL = 0x200,
-    ADC_CR1_JAUTO = 0x400,
-    ADC_CR1_DISCEN = 0x800,
-    ADC_CR1_JDISCEN = 0x1000,
-    ADC_CR1_DISCNUM = 0xE000,
-    ADC_CR1_JAWDEN = 0x40000,
-    ADC_CR1_AWDEN = 0x80000,
-    ADC_CR1_RES = 0x300000,
-    ADC_CR1_OVRIE = 0x400000
+    // Resolution bits
+    ADC_CR1_RES_12B = 0x00000000, // 12 bits
+    ADC_CR1_RES_10B = 0x100000,    // 10 bits
+    ADC_CR1_RES_8B  = 0x200000,    // 8 bits
+    ADC_CR1_RES_6B  = 0x300000,     // 6 bits
+
+    ADC_CR1_AWDCH   = 0x1F,     // Bits for Analog Watchdog Channel Selection
+    ADC_CR1_EOCIE   = 0x20,     // End of Conversion Interrupt Enable
+    ADC_CR1_AWDIE   = 0x40,     // Analog Watchdog Interrupt Enable
+    ADC_CR1_JEOCIE  = 0x80,     // Injected Channel End of Conversion Interrupt Enable
+    ADC_CR1_SCAN    = 0x100,    // Scan Mode Enable
+    ADC_CR1_AWDSGL  = 0x200,    // Enable the Analog Watchdog on a Single Channel
+    ADC_CR1_JAUTO   = 0x400,    // Automatic Injected Group Conversion
+    ADC_CR1_DISCEN  = 0x800,    // Discontinuous Mode Enable
+    ADC_CR1_JDISCEN = 0x1000,   // Discontinuous Mode for Injected Channels Enable
+    ADC_CR1_DISCNUM = 0xE000,   // Discontinuous Mode Channel Count
+    ADC_CR1_JAWDEN  = 0x40000,  // Injected Channel Analog Watchdog Enable
+    ADC_CR1_AWDEN   = 0x80000,  // Analog Watchdog Enable
+    ADC_CR1_OVRIE   = 0x400000  // Overrun Interrupt Enable
 } ADC_CR1_Bits;
 
 // ADC_CR2 register bit definitions
@@ -80,7 +85,7 @@ typedef enum {
     ADC_CR2_JSWSTART = 0x40000,
     ADC_CR2_EXTSEL = 0xF00000,
     ADC_CR2_EXTEN = 0x3000000,
-    ADC_CR2_SWSTART = 0x4000000
+    ADC_CR2_SWSTART = (1 << 30)
 } ADC_CR2_Bits;
 
 // ADC_SMPR1 register bit definitions

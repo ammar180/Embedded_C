@@ -1,3 +1,4 @@
+"./Src/Stm32f401-ADC-handler.o"
 "./Src/Stm32f401-gpio.o"
 "./Src/main.o"
 "./Src/syscalls.o"

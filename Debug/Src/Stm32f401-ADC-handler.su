@@ -1,0 +1,4 @@
+../Src/Stm32f401-ADC-handler.c:3:6:ADC_EnableClock	4	static
+../Src/Stm32f401-ADC-handler.c:7:6:ADC_Init	24	static
+../Src/Stm32f401-ADC-handler.c:35:10:ADC_Read	4	static
+../Src/Stm32f401-ADC-handler.c:40:5:ConvertToTemperature	32	static

@@ -35,13 +35,19 @@ void delay(volatile uint32_t time) {
     for(uint32_t i = 0; i < time * 1000; i++);
 }
 
+int ConvertCelsiusToFahrenheit(int temperature)
+{
+    return (temperature * 9 / 5) + 32;
+}
+
 int main(void)
 {
     GPIO_EnableClock(GPIOA);
     ADC_EnableClock();
 
     // define the LM35 temperature sensor pin as an analog input (for temperature measurement via ADC)
-    GPIO_Init(GPIOA, TEMP_SENSOR_PIN, ANALOG, LOW_SPEED, PUSH_PULL, PULL_UP);
+    GPIOA->MODER |= (ANALOG << TEMP_SENSOR_PIN);
+    // GPIO_Init(GPIOA, TEMP_SENSOR_PIN, ANALOG, LOW_SPEED, PUSH_PULL, PULL_UP);
     // define teh 3 LEDs pins (Green, Yellow, Red for status indication)
     GPIO_Init(GPIOA, RED_LED_PIN, OUTPUT, LOW_SPEED, PUSH_PULL, PULL_UP);    // Red LED
     GPIO_Init(GPIOA, GREEN_LED_PIN, OUTPUT, LOW_SPEED, PUSH_PULL, PULL_UP);  // Green LED
@@ -55,13 +61,13 @@ int main(void)
     GPIO_Init(GPIOA, FAN_PIN, OUTPUT, LOW_SPEED, PUSH_PULL, PULL_UP);
 
     // Initialize the ADC to read from the temperature sensor
-    ADC_Init(ADC_CHANNEL_0, ADC_SAMPLETIME_3CYCLES, ADC_CR1_RES);
+    ADC_Init(ADC_CHANNEL_0, ADC_SAMPLETIME_3CYCLES, ADC_CR1_RES_12B);
 
     while (1)
     {
         // Read temperature sensor value
         uint32_t adcValue = ADC_Read();
-        float temperature = ConvertToTemperature(adcValue);
+        int temperature = ConvertToTemperature(adcValue, ADC_CR1_RES_12B);
         /**
          * Below 25°C → Green LED ON, Fan OFF
          * 26°C – 35°C → Yellow LED ON, Fan ON
@@ -101,15 +107,15 @@ int main(void)
             {
                 // Long press detected
                 // Reset the system
-                SystemReset();
+                // SystemReset();
             }
             else
             {
                 // Short press detected
                 // Toggle between Celsius and Fahrenheit
+                float fahrenheit = ConvertCelsiusToFahrenheit(temperature);
             }
         }
 
-        delay(1000); // Delay for 1 second
     }
 }
