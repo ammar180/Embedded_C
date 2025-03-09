@@ -76,45 +76,43 @@ int main(void)
          */
         if (temperature < 25)
         {
-            GPIO_WriteOutputPin(GPIOA, GREEN_LED_PIN, 1); // Green LED ON
+        	GPIO_WriteOutputPin(GPIOA, GREEN_LED_PIN, 1); // Green LED ON
+			GPIO_WriteOutputPin(GPIOA, YELLOW_LED_PIN, 0); // Yellow LED OFF
+			GPIO_WriteOutputPin(GPIOA, RED_LED_PIN, 0); // Red LED OFF
+
             GPIO_WriteOutputPin(GPIOA, FAN_PIN, 0); // Fan OFF
         }
         else if (temperature >= 26 && temperature <= 35)
         {
+        	GPIO_WriteOutputPin(GPIOA, GREEN_LED_PIN, 0); // Green LED OFF
             GPIO_WriteOutputPin(GPIOA, YELLOW_LED_PIN, 1); // Yellow LED ON
+            GPIO_WriteOutputPin(GPIOA, RED_LED_PIN, 0); // Red LED OFF
+
             GPIO_WriteOutputPin(GPIOA, FAN_PIN, 1); // Fan ON
         }
         else if (temperature > 35 && temperature < 45)
         {
-            GPIO_WriteOutputPin(GPIOA, RED_LED_PIN, 1); // Red LED ON
-            GPIO_WriteOutputPin(GPIOA, FAN_PIN, 1); // Fan ON
+        	GPIO_WriteOutputPin(GPIOA, GREEN_LED_PIN, 0); // Green LED OFF
+			GPIO_WriteOutputPin(GPIOA, YELLOW_LED_PIN, 0); // Yellow LED OFF
+			GPIO_WriteOutputPin(GPIOA, RED_LED_PIN, 1); // Red LED ON
+
+			GPIO_WriteOutputPin(GPIOA, FAN_PIN, 1); // Fan ON
         }
         else
         {
-            GPIO_WriteOutputPin(GPIOA, RED_LED_PIN, 1); // Red LED ON
+        	GPIO_WriteOutputPin(GPIOA, GREEN_LED_PIN, 0); // Green LED OFF
+			GPIO_WriteOutputPin(GPIOA, YELLOW_LED_PIN, 1); // Yellow LED ON
+			GPIO_WriteOutputPin(GPIOA, RED_LED_PIN, 0); // Red LED OFF
+
+			GPIO_WriteOutputPin(GPIOA, FAN_PIN, 1); // Fan ON
             GPIO_WriteOutputPin(GPIOA, BUZZER_PIN, 1); // Buzzer ON
-            GPIO_WriteOutputPin(GPIOA, FAN_PIN, 1); // Fan ON
         }
         /**
          * Button Functions:
-         * Short Press: Toggle between Celsius (°C) and Fahrenheit (°F) display.
-         * Long Press: Reset the entire system
+         * Long Press: turn the fan off
          */
         if (GPIO_ReadInputPin(GPIOA, BUTTON_PIN) == 0)
         {
-            delay(500); // Delay for 0.5 second
-            if (GPIO_ReadInputPin(GPIOA, BUTTON_PIN) == 0)
-            {
-                // Long press detected
-                // Reset the system
-                // SystemReset();
-            }
-            else
-            {
-                // Short press detected
-                // Toggle between Celsius and Fahrenheit
-                float fahrenheit = ConvertCelsiusToFahrenheit(temperature);
-            }
         }
 
     }

@@ -5,36 +5,20 @@ void ADC_EnableClock(void) {
 }
 
 void ADC_Init(ADC_Channel channel, ADC_SampleTime sampleTime, ADC_CR1_Bits resolution) {
-	ADC1->CR2 |= (1 << 0);      // Enable ADC (ADON bit)
-
-		/**
-		 * @note Short delay for ADC stabilization.
-		 */
-		for (volatile int i = 0; i < 1000; i++); // Short delay
-
-		/**
-		 * @note Use default 12-bit resolution (CR1 = 0).
-		 */
-		ADC1->CR1 = 0;              // 12-bit resolution (default)
-
-		/**
-		 * @note Set ADC channel 0 (PA0) as the first conversion.
-		 */
-		ADC1->SQR3 = 0;
-//    ADC1->CR2 |= ADC_CR2_ADON; // Enable ADC
-//    for (volatile int i = 0; i < 1000; i++); // Short delay
-//    ADC1->CR1 |= resolution;   // Set resolution to 12 bits
-//    if (channel < ADC_CHANNEL_10) {
-//        ADC1->SMPR2 |= (sampleTime << (channel * 3)); // Set sampling time for channels 0-9
-//    } else {
-//        ADC1->SMPR1 |= (sampleTime << ((channel - ADC_CHANNEL_10) * 3)); // Set sampling time for channels 10-18
-//    }
-//    ADC1->SQR3 = channel; // Set the channel as the first conversion in regular sequence
+    ADC1->CR2 |= ADC_CR2_ADON; // Enable ADC
+    for (volatile int i = 0; i < 1000; i++); // Short delay
+    ADC1->CR1 |= resolution;   // Set resolution to 12 bits
+    if (channel < ADC_CHANNEL_10) {
+        ADC1->SMPR2 |= (sampleTime << (channel * 3)); // Set sampling time for channels 0-9
+    } else {
+        ADC1->SMPR1 |= (sampleTime << ((channel - ADC_CHANNEL_10) * 3)); // Set sampling time for channels 10-18
+    }
+    ADC1->SQR3 = channel; // Set the channel as the first conversion in regular sequence
 }
 
 uint32_t ADC_Read(void) {
     ADC1->CR2 |= (1 << 30); // Start conversion
-    while (!(ADC1->SR &  (1 << 1))); // Wait for conversion to complete
+    while (!(ADC1->SR &  ADC_SR_EOC)); // Wait for conversion to complete
     return ADC1->DR; // Read ADC value from data register
 }
 int ConvertToTemperature(uint32_t adcValue, ADC_CR1_Bits resolution) {

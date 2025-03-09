@@ -5,8 +5,8 @@
 *      Author: ammar.ahmed
 */
 
-#ifndef STM32F401-ADC_H_
-#define STM32F401-ADC_H_
+#ifndef STM32F401_ADC_H_
+#define STM32F401_ADC_H_
 
 #include <stdint.h>
 
@@ -42,7 +42,7 @@ typedef struct
 // ADC_SR register bit definitions
 typedef enum {
     ADC_SR_AWD = 0x01,
-    ADC_SR_EOC = (1 << 1),
+    ADC_SR_EOC = 0x02,
     ADC_SR_JEOC = 0x04,
     ADC_SR_JSTRT = 0x08,
     ADC_SR_STRT = 0x10,
@@ -74,18 +74,18 @@ typedef enum {
 
 // ADC_CR2 register bit definitions
 typedef enum {
-    ADC_CR2_ADON = 0x01,
-    ADC_CR2_CONT = 0x02,
-    ADC_CR2_DMA = 0x100,
-    ADC_CR2_DDS = 0x200,
-    ADC_CR2_EOCS = 0x400,
-    ADC_CR2_ALIGN = 0x800,
-    ADC_CR2_JEXTSEL = 0xF000,
-    ADC_CR2_JEXTEN = 0x30000,
-    ADC_CR2_JSWSTART = 0x40000,
-    ADC_CR2_EXTSEL = 0xF00000,
-    ADC_CR2_EXTEN = 0x3000000,
-    ADC_CR2_SWSTART = (1 << 30)
+    ADC_CR2_ADON      = (1 << 0),       // Bit 0: ADC ON/OFF
+    ADC_CR2_CONT      = (1 << 1),       // Bit 1: Continuous Conversion Mode
+    ADC_CR2_DMA       = (1 << 2),       // Bit 2: DMA Mode
+    ADC_CR2_DDS       = (1 << 8),       // Bit 8: DMA Disable Selection
+    ADC_CR2_EOCS      = (1 << 9),       // Bit 9: End of Conversion Selection
+    ADC_CR2_ALIGN     = (1 << 10),      // Bit 10: Data Alignment
+    ADC_CR2_JEXTSEL   = (0xF << 12),    // Bits 12-15: Injected External Trigger Selection
+    ADC_CR2_JEXTEN    = (0x3 << 16),    // Bits 16-17: Injected External Trigger Enable
+    ADC_CR2_JSWSTART  = (1 << 18),      // Bit 18: Start Conversion for Injected Group
+    ADC_CR2_EXTSEL    = (0xF << 20),    // Bits 20-23: External Trigger Selection
+    ADC_CR2_EXTEN     = (0x3 << 24),    // Bits 24-25: External Trigger Enable
+    ADC_CR2_SWSTART   = (1 << 30)       // Bit 30: Start Conversion for Regular Group
 } ADC_CR2_Bits;
 
 // ADC_SMPR1 register bit definitions
@@ -188,4 +188,4 @@ typedef enum {
     ADC_SAMPLETIME_480CYCLES
 } ADC_SampleTime;
 
-#endif /* STM32F401-ADC_H_ */
+#endif /* STM32F401_ADC_H_ */
